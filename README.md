@@ -13,7 +13,7 @@
 BrainStorm é um sistema de gerenciamento de chamados em PHP, onde é possível criar e gerenciar chamados de TI. O projeto é usado em conjunto com o uso do pacote XAMPP para desenvolvimento PHP.
 
 ## Diagrama do Banco
-![img](assets\BrainStorm_db_diagram.png)
+![img](assets/BrainStorm_db_diagram.png)
 
 ## Bibliotecas
 
