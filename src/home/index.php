@@ -1,5 +1,5 @@
 <?php
-include_once('../checkSession.php');
+include_once('../core/checkSession.php');
 ?>
 
 <!DOCTYPE html>
@@ -9,6 +9,9 @@ include_once('../checkSession.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BrainStorm</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="../../stylesheet/style.css">
+    <link rel="icon" type="image/x-icon" href="../../assets/storm-icon.svg">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -17,10 +20,9 @@ include_once('../checkSession.php');
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-    
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <!-- Dropdown 1 -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Chamados
@@ -52,9 +54,41 @@ include_once('../checkSession.php');
             </div>
         </div>
     </nav>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        console.log(<?php echo $_SESSION['id']; ?>);
-    </script>
+    <div class="container">
+        <h1 class="text-center mt-5">Bem-vindo ao BrainStorm</h1>
+        <div class="conteudo">
+            <div class="row align-items-start p-2">
+                <div class="box-container">
+                    <div class="col text-center">
+                        <h3>Abrir Chamado</h3>
+                        <div class="p-3">
+                            <p>
+                                Para abrir um chamado, você precisará de algumas informações primeiro. Será necessário a descrição do problema,
+                                o tipo de incidente que se refere o chamado, contato da pessoa que solicitou o chamado (Nome e Telefone, 
+                                podendo ter 1 ou mais telefone para contato), anexos e observações adicionais. Assim que tiver todas essas
+                                informações, poderá prosseguir com a abertura do chamado.
+                            </p>
+                        </div>
+                        <a href="../criar_chamado/">
+                            <button type="button" class="btn btn-primary">Abrir</button>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-container">
+                    <div class="col text-center">
+                        <h3>Ver Chamados</h3>
+                        <div class="p-3">
+                            <p>
+                                Aqui você poderá visualizar os chamados abertos para a sua equipe de TI, onde poderá verificar o status de
+                                cada chamado e as alterações feitas pelos técnicos em formato de Timeline. Poderá também adicionar novos anexos e
+                                novas descrições ao chamado.
+                            </p>
+                        </div>
+                        <button type="button" class="btn btn-primary">Ver</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

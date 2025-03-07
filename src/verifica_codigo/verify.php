@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+// Conexão com o banco de dados
 $servername = "localhost";
 $username = "root";
 $db_password = "";
@@ -10,12 +11,12 @@ if ($conn->connect_error) {
     die(json_encode(['success' => false, 'message' => 'Database connection failed']));
 }
 
-// Recebe os dados do POST
+// Recebe os dados da requisição
 $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
 $code = $_POST['code'];
 
-// Verifica se o email e o código estão corretos
-$query = $conn->prepare("SELECT id FROM usuario WHERE email = ? AND verification_code = ? AND verified = 0");
+// Verifica se o email e o código estão corretos, e se a conta ainda não foi verificada
+$query = $conn->prepare("SELECT id FROM usuario WHERE email = ? AND auth_code = ? AND verified = 0");
 $query->bind_param("ss", $email, $code);
 $query->execute();
 $query->store_result();

@@ -1,4 +1,5 @@
 <?php
+// Evita que o usuário tenha dados de uma sessão antiga
 session_start();
 session_unset();
 session_destroy();
@@ -9,27 +10,16 @@ session_destroy();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <!-- Bootstrap CSS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 30px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+    <link rel="stylesheet" href="../../stylesheet/style.css">
+    <link rel="icon" type="image/x-icon" href="../../assets/storm-icon.svg">
 </head>
 <body>
 
 <div class="container">
-    <div class="login-container">
+    <div class="simple-container">
         <h3 class="text-center">Login</h3>
         <form id="login-form">
             <div class="mb-3">
@@ -60,16 +50,24 @@ session_destroy();
         var email = $('#email').val();
         var password = $('#password').val();
 
+        // Envia os dados do formulário para o login do usuário
         $.ajax({
             url: 'login.php',
             type: 'POST',
             data: { email: email, password: password },
             dataType: 'json',
             success: function (response) {
-                if (response.success) {
+                // Se o login for bem sucedido e a conta for verificada, redireciona para a página inicial
+                if (response.success && response.verified) {
                     window.location = '../home/index.php';
+                }
+                // Se o login for bem sucedido e a conta não for verificada, redireciona para a página de verificação
+                else if (response.success && !response.verified) {
+                    console.log(response.email);
+                    alert('Conta não verificada');
+                    window.location = '../verifica_codigo/index.php';
                 } else {
-                    $('#error-msg').text(response.message);
+                    $('#error-msg').text('Email ou senha inválidos');
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -79,8 +77,5 @@ session_destroy();
     });
 });
 </script>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
