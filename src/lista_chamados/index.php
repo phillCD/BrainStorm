@@ -1,27 +1,29 @@
 <?php
-// Verifica se o usuário possui uma sessão ativa e evita acesso via url
+include '../core/checkSession.php';
+?>
+<?php
 include_once('../core/checkSession.php');
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrainStorm</title>
+    <title>Lista de Chamados</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="../../stylesheet/style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/storm-icon.svg">
+    <link rel="stylesheet" href="../../stylesheet/style.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">BrainStorm</a>
+            <a class="navbar-brand" href="../home/">BrainStorm</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
+    
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item dropdown">
@@ -30,7 +32,7 @@ include_once('../core/checkSession.php');
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
                             <li><a class="dropdown-item" href="../criar_chamado/">Abrir Chamados</a></li>
-                            <li><a class="dropdown-item" href="../lista_chamados/">Ver Chamados</a></li>
+                            <li><a class="dropdown-item" href="#">Ver Chamados</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -56,42 +58,50 @@ include_once('../core/checkSession.php');
         </div>
     </nav>
     <div class="container">
-        <h1 class="text-center mt-5">Bem-vindo ao BrainStorm</h1>
-        <div class="conteudo">
-            <div class="row align-items-start p-2">
-                <div class="box-container">
-                    <div class="col text-center">
-                        <h3>Abrir Chamado</h3>
-                        <div class="p-3">
-                            <p>
-                                Para abrir um chamado, você precisará de algumas informações primeiro. Será necessário a descrição do problema,
-                                o tipo de incidente que se refere o chamado, contato da pessoa que solicitou o chamado (Nome e Telefone, 
-                                podendo ter 1 ou mais telefone para contato), anexos e observações adicionais. Assim que tiver todas essas
-                                informações, poderá prosseguir com a abertura do chamado.
-                            </p>
-                        </div>
-                        <a href="../criar_chamado/">
-                            <button type="button" class="btn btn-primary">Abrir</button>
-                        </a>
-                    </div>
+        <div class="row mt-5">
+            <div class="col-md-8 offset-md-2">
+                <div class="text-center">
+                    <h1>Lista de Chamados</h1>
                 </div>
-                <div class="box-container">
-                    <div class="col text-center">
-                        <h3>Ver Chamados</h3>
-                        <div class="p-3">
-                            <p>
-                                Aqui você poderá visualizar os chamados abertos para a sua equipe de TI, onde poderá verificar o status de
-                                cada chamado e as alterações feitas pelos técnicos em formato de Timeline. Poderá também adicionar novos anexos e
-                                novas descrições ao chamado.
-                            </p>
-                        </div>
-                        <a href="../lista_chamados/">
-                            <button type="button" class="btn btn-primary">Ver</button>
-                        </a>
-                    </div>
+                <div class="list-group">
+                    <div id="lista-chamados"></div>
                 </div>
-            </div>
+
         </div>
     </div>
+    <script>
+        $(document).ready( function() {
+            $chamados = '';
+            $.ajax({
+                url: 'list_chamados.php',
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        console.log(response);
+                        response.chamados.forEach(chamado => {
+                            $chamados += `
+                                <a href="../visualiza_chamado/?id=${chamado.id}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">Chamado ${chamado.id}</h5>
+                                        <small>${chamado.data_abertura}</small>
+                                    </div>
+                                    <p class="mb-1">${chamado.descricao}</p>
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <p class="mb-1">${chamado.tipo_incidente}</p>
+                                        <small>Aberto por ${chamado.autor_chamado}</small>
+                                    </div>
+                                </a>
+                            `;
+                        });
+                        $('#lista-chamados').html($chamados);
+                        } else {
+                            console.log(response);
+                            alert(response.message);
+                        }
+                    },
+            });
+        });
+    </script>
 </body>
 </html>

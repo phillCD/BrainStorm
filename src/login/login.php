@@ -34,11 +34,11 @@ if ($conn->connect_error) {
 }
 
 // Prepara e executa a query para buscar o usuário
-$query = $conn->prepare("SELECT nome, password, verified FROM usuario WHERE email = ?");
+$query = $conn->prepare("SELECT nome, password, verified, id FROM usuario WHERE email = ?");
 $query->bind_param("s", $email);
 $query->execute();
 $query->store_result();
-$query->bind_result($nome, $hashed_password, $verified);
+$query->bind_result($nome, $hashed_password, $verified, $id);
 $query->fetch();
 
 $response = array();
@@ -54,6 +54,7 @@ if ($query->num_rows > 0) {
         $_SESSION['verified'] = false;
         $_SESSION['nome'] = $nome;
         $_SESSION['email'] = $email;
+        $_SESSION['id'] = $id;
         $query->close();
         $conn->close();
         header('Content-Type: application/json');
@@ -66,6 +67,7 @@ if ($query->num_rows > 0) {
             $_SESSION['nome'] = $nome;
             $_SESSION['verified'] = true;
             $_SESSION['email'] = $email;
+            $_SESSION['id'] = $id;
             $response['success'] = true;
             $response['verified'] = true;
         } else {

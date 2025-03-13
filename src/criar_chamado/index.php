@@ -1,3 +1,7 @@
+<?php
+// Verifica se o usuário possui uma sessão ativa e evita acesso via url
+include_once('../core/checkSession.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,13 +9,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Abrir Chamado</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <link rel="icon" type="image/x-icon" href="../../assets/storm-icon.svg">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">BrainStorm</a>
+            <a class="navbar-brand" href="../home/">BrainStorm</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -24,7 +30,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
                             <li><a class="dropdown-item" href="#">Abrir Chamados</a></li>
-                            <li><a class="dropdown-item" href="#">Ver Chamados</a></li>
+                            <li><a class="dropdown-item" href="../lista_chamados/">Ver Chamados</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -53,11 +59,7 @@
         <div class="row mt-5">
             <div class="col-md-6 offset-md-3">
                 <h1>Abrir Chamado</h1>
-                <form action="criar_chamado.php" method="POST">
-                    <div class="mb-3">
-                        <label for="titulo" class="form-label">Título</label>
-                        <input type="text" class="form-control" id="titulo" name="titulo" required>
-                    </div>
+                <form id="signup-form">
                     <div class="mb-3">
                         <label for="descricao" class="form-label">Descrição</label>
                         <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
@@ -65,15 +67,89 @@
                     <div class="mb-3">
                         <label for="categoria" class="form-label">Categoria</label>
                         <select class="form-select" id="categoria" name="categoria" required>
-                            <option value="1">Hardware</option>
-                            <option value="2">Software</option>
-                            <option value="3">Rede</option>
+                            <option value="Hardware">Hardware</option>
+                            <option value="Software">Software</option>
+                            <option value="Rede">Rede</option>
                         </select>
+                    </div>
+                    <div class="row align-items-start">
+                        <div class="col mb-3">
+                            <label for="nome-solicitante" class="form-label">Nome do Solicitante</label>
+                            <input type="text" class="form-control" id="nome-solicitante" name="nome-solicitante" required>
+                        </div>
+                        <div class="col mb-3">
+                            <label for="telefone-solicitante-1" class="form-label">Telefone do Solicitante</label>
+                            <input type="tel" class="form-control" id="telefone-solicitante-1" name="telefone-solicitante-1" required>
+                        </div>
+                    </div>
+                    <div id="additional-phones"></div>
+                    <div class="d-flex justify-content-end mb-3">
+                        <button type="button" class="btn btn-secondary" id="add-phone">Adicionar Telefone</button>
+                    </div>
+                    <div class="mb-3">
+                        <label for="anexos" class="form-label">Anexos</label>
+                        <input class="form-control" type="file" id="anexos" name="anexos" multiple required>
                     </div>
                     <button type="submit" class="btn btn-primary">Abrir Chamado</button>
                 </form>
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            var comportamentoMascara = function (val) {
+                return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+            },
+            options = {
+                onKeyPress: function (val, e, field, options) {
+                    field.mask(comportamentoMascara.apply({}, arguments), options);
+                }
+            };
+            $('#telefone-solicitante-1').mask(comportamentoMascara, options);
+
+            var indexTelefone = 2;
+            $('#add-phone').click(function () {
+                var newPhoneField = `
+                    <div class="mb-3">
+                        <label for="telefone-solicitante-${indexTelefone}" class="form-label">Telefone do Solicitante ${indexTelefone}</label>
+                        <input type="tel" class="form-control" id="telefone-solicitante-${indexTelefone}" name="telefone-solicitante-${indexTelefone}" required>
+                    </div>
+                `;
+                $('#additional-phones').append(newPhoneField);
+                $(`#telefone-solicitante-${indexTelefone}`).mask(phoneMaskBehavior, phoneOptions);
+                phoneIndex++;
+            });
+
+            $('#signup-form').submit(function (event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+                
+                $('#additional-phones input').each(function () {
+                    formData.append($(this).attr('name'), $(this).val());
+                });
+
+                var anexos = $('#anexos')[0].files;
+                for (var i = 0; i < anexos.length; i++) {
+                    console.log(anexos[i]);
+                    formData.append('anexos[]', anexos[i]);
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: 'criar_chamado.php',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        console.log(data);
+                        alert('Chamado aberto com sucesso!')
+                        window.location = '../lista_chamados/';
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
