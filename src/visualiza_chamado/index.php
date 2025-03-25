@@ -104,7 +104,7 @@ include_once('../core/checkSession.php');
                             <label for="upload" class="form-label text-danger p-2">Adicionar Anexos</label>
                             <h5 class="card-title">Novas Descrições</h5>
                             <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
-                            <button class="btn btn-primary mt-3">Adicionar Descrição</button>
+                            <button id="addDescricao" class="btn btn-primary mt-3">Adicionar Descrição</button>
                             <h5 class="card-title">Histórico</h5>
                             `);
 
@@ -128,6 +128,29 @@ include_once('../core/checkSession.php');
                             $('#chamado-details').append(`
                                 <p class="card-text"><small class="text-muted">${alteracao.alteracao} por ${alteracao.autor} em ${alteracao.data}</small></p>
                             `);
+                        });
+                        $('#addDescricao').click(function() {
+                            let descricao = $('#descricao').val();
+                            $.ajax({
+                                url: '../core/addDescricao.php',
+                                type: 'POST',
+                                data: { id: $id, descricao: descricao },
+                                dataType: 'json',
+                                success: function(response) {
+                                    console.log(response);
+                                    if (response.success) {
+                                        alert("Descrição adicionada com sucesso");
+                                        window.location.reload();
+                                    } else {
+                                        console.log(response);
+                                        alert("Erro ao adicionar descrição");
+                                    }
+                                },
+                                error: function(response) {
+                                    alert("Erro ao adicionar descrição");
+                                    console.log(response.responseText);
+                                }
+                            });
                         });
                         $('#upload').change(function() {
                             const data = new FormData();
