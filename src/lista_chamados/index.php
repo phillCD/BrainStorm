@@ -87,7 +87,7 @@ include_once('../core/checkSession.php');
                                         <h5 class="mb-1">Chamado ${chamado.id}</h5>
                                         <small>${chamado.data_abertura}</small>
                                     </div>
-                                    <p class="mb-1">${chamado.descricao}</p>
+                                    ${chamado.descricao}
                                     <div class="d-flex w-100 justify-content-between">
                                         <p class="mb-1">${chamado.tipo_incidente}</p>
                                         <small>Aberto por ${chamado.autor_chamado}</small>

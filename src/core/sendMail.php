@@ -1,5 +1,4 @@
 <?php
-//Função para enviar email de forma assíncrona
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -22,16 +21,17 @@ function sendMail($to, $subject, $message){
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'brainstorm.authcode@gmail.com';
-        $mail->Password = 'xcmb ojqu qhmw ruqp';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
-
+        $mail->Username = 'brainstorm.authcode@gmail.com';
+        $mail->Password = 'lwza oale jfip vyth';
+        
         // Config email
         $mail->CharSet = 'UTF-8';
         $mail->setFrom('brainstorm.authcode@gmail.com', 'Brainstorm');
         $mail->addAddress($to);
         $mail->Subject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
+
         $mail->Body = $message;
         $mail->isHTML(true);
 

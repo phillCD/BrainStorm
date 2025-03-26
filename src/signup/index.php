@@ -190,7 +190,7 @@ session_destroy();
                             }
                         })
                         alert(response.message);
-                        window.location = '../index.php';
+                        window.location = '../login';
                     } else {
                         $('#error-msg').text(response.message);
                     }

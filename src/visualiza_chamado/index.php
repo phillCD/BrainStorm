@@ -77,11 +77,13 @@ include_once('../core/checkSession.php');
     </div>
     <script>
         $(document).ready( function() {
+            // Cria um parser para converter a descrição do chamado de string pra HTML
+            const parser = new DOMParser();
             const urlParams = new URLSearchParams(window.location.search);
             console.log(urlParams);
             const $id = urlParams.get('id');
             console.log($id);
-            // Busca o chamado
+            // Pega as informações do chamado
             $.ajax({
                 url: 'get_chamado.php',
                 type: 'POST',
@@ -91,11 +93,12 @@ include_once('../core/checkSession.php');
                     console.log(response);
                     if (response.success) {
                         const chamado = response.chamado;
+                        const descricao = parser.parseFromString(chamado.descricao, 'text/html').body.textContent;
                         let telefones = {};
                         console.log(chamado);
                         $('#chamado-details').html(`
                             <h3 class="card-title">Chamado ${chamado.id}</h5>
-                            <p class="card-text">${chamado.descricao}</p>
+                            <p class="card-text" id="descricao">${descricao}</p>
                             <h5 class="card-title">Solicitante</h5>
                             <p class="card-text">Nome: ${chamado.nome_solicitante}</p>
                             <div id="telefones" class="row align-items-start"></div>
@@ -107,8 +110,9 @@ include_once('../core/checkSession.php');
                             <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
                             <button id="addDescricao" class="btn btn-primary mt-3">Adicionar Descrição</button>
                             <h5 class="card-title">Histórico</h5>
-                            `);
+                        `);
 
+                        
                         // Pra cada telefone, cria um parágrafo com o número
                         for (let i = 0; i < chamado.telefone_solicitante.length; i++) {
                             telefones[`telefone_${i}`] = chamado.telefone_solicitante[i];
