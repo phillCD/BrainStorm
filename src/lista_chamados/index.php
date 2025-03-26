@@ -72,6 +72,7 @@ include_once('../core/checkSession.php');
     <script>
         $(document).ready( function() {
             $chamados = '';
+            // Pega e exibe a lista de chamados
             $.ajax({
                 url: 'list_chamados.php',
                 type: 'GET',

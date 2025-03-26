@@ -81,6 +81,7 @@ include_once('../core/checkSession.php');
             console.log(urlParams);
             const $id = urlParams.get('id');
             console.log($id);
+            // Busca o chamado
             $.ajax({
                 url: 'get_chamado.php',
                 type: 'POST',
@@ -108,11 +109,13 @@ include_once('../core/checkSession.php');
                             <h5 class="card-title">Histórico</h5>
                             `);
 
+                        // Pra cada telefone, cria um parágrafo com o número
                         for (let i = 0; i < chamado.telefone_solicitante.length; i++) {
                             telefones[`telefone_${i}`] = chamado.telefone_solicitante[i];
                             $('#telefones').append(`<p class="col card-text">Telefone ${i + 1}: ${chamado.telefone_solicitante[i]}</p>`);
                         }
 
+                        // Pra cada anexo, cria um botão com o nome do arquivo
                         for (let i = 0; i < chamado.anexos.length; i++) {
                             let anexo = chamado.anexos[i];
                             let decodedData = atob(anexo.base64);
@@ -129,6 +132,7 @@ include_once('../core/checkSession.php');
                                 <p class="card-text"><small class="text-muted">${alteracao.alteracao} por ${alteracao.autor} em ${alteracao.data}</small></p>
                             `);
                         });
+                        // Adiciona descrição
                         $('#addDescricao').click(function() {
                             let descricao = $('#descricao').val();
                             $.ajax({
@@ -152,6 +156,7 @@ include_once('../core/checkSession.php');
                                 }
                             });
                         });
+                        // Adiciona anexos
                         $('#upload').change(function() {
                             const data = new FormData();
                             data.append('id', $id);

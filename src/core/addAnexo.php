@@ -1,4 +1,5 @@
 <?php
+// Debug
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -28,6 +29,7 @@ $query->store_result();
 $query->bind_result($anexos_anteriores, $alteracoes);
 $query->fetch();
 
+// Converte os anexos para base64
 $anexos = $_FILES;
 $anexos_base64 = [];
 foreach ($anexos['anexos']['tmp_name'] as $key => $tmp_name) {
@@ -45,7 +47,7 @@ $alteracao[] = [
     'alteracao' => 'Anexo adicionado'
 ];
 
-// Decode existing alterations and ensure it's an array
+// Decodifica as alterações existentes e garante que seja um array
 $alteracoes_json = json_decode($alteracoes, true);
 if (!is_array($alteracoes_json)) {
     $alteracoes_json = [];
@@ -53,7 +55,7 @@ if (!is_array($alteracoes_json)) {
 $alteracoes_json = array_merge($alteracoes_json, $alteracao);
 $alteracoes_json_encoded = json_encode($alteracoes_json);
 
-// Decode existing attachments and ensure it's an array
+// Decodifica os anexos existentes e garante que seja um array
 $anexos_json = json_decode($anexos_anteriores, true);
 if (!is_array($anexos_json)) {
     $anexos_json = [];

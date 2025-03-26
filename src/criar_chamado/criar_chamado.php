@@ -27,6 +27,7 @@ $alteracao_inicial[] = [
     'alteracao' => 'Chamado aberto'
 ];
 
+// Converte os anexos para base64
 foreach ($anexos['anexos']['tmp_name'] as $key => $tmp_name) {
     $file_content = file_get_contents($tmp_name);
     $base64 = base64_encode($file_content);
