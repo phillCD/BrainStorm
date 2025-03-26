@@ -12,7 +12,7 @@ $categoria = htmlspecialchars($_POST['categoria'], ENT_QUOTES, 'UTF-8');
 $nome_solicitante = htmlspecialchars($_POST['nome-solicitante'], ENT_QUOTES, 'UTF-8');
 $telefone_solicitante = htmlspecialchars($_POST['telefone-solicitante-1'], ENT_QUOTES, 'UTF-8');
 if (isset($_POST['telefones-adicionais'])) {
-    $telefones_adicionais = htmlspecialchars($_POST['telefones-adicionais'], ENT_QUOTES, 'UTF-8');
+    $telefones_adicionais = array_map('htmlspecialchars', $_POST['telefones-adicionais']);
     $telefones = array($telefone_solicitante, $telefones_adicionais);
 } else {
     $telefones = array($telefone_solicitante);

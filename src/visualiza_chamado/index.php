@@ -101,22 +101,22 @@ include_once('../core/checkSession.php');
                             <p class="card-text" id="descricao">${descricao}</p>
                             <h5 class="card-title">Solicitante</h5>
                             <p class="card-text">Nome: ${chamado.nome_solicitante}</p>
-                            <div id="telefones" class="row align-items-start"></div>
+                            <div id="telefones" class="row align-items-start"><p class="col card-text">Telefone 1: ${chamado.telefone_solicitante[0]}</p></div>
                             <h5 class="card-title">Anexos</h5>
                             <div id="anexos"></div>
                             <input type="file" id="upload" name="upload" hidden multiple>
                             <label for="upload" class="form-label text-danger p-2">Adicionar Anexos</label>
                             <h5 class="card-title">Novas Descrições</h5>
-                            <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+                            <textarea class="form-control" id="nova-descricao" name="nova-descricao" rows="3" required></textarea>
                             <button id="addDescricao" class="btn btn-primary mt-3">Adicionar Descrição</button>
                             <h5 class="card-title">Histórico</h5>
                         `);
 
                         
                         // Pra cada telefone, cria um parágrafo com o número
-                        for (let i = 0; i < chamado.telefone_solicitante.length; i++) {
-                            telefones[`telefone_${i}`] = chamado.telefone_solicitante[i];
-                            $('#telefones').append(`<p class="col card-text">Telefone ${i + 1}: ${chamado.telefone_solicitante[i]}</p>`);
+                        for (let i = 0; i < (chamado.telefone_solicitante[1].length); i++) {
+                            telefones[`telefone_${i}`] = chamado.telefone_solicitante[1][i];
+                            $('#telefones').append(`<p class="col card-text">Telefone ${i + 2}: ${chamado.telefone_solicitante[1][i]}</p>`);
                         }
 
                         // Pra cada anexo, cria um botão com o nome do arquivo
@@ -138,7 +138,7 @@ include_once('../core/checkSession.php');
                         });
                         // Adiciona descrição
                         $('#addDescricao').click(function() {
-                            let descricao = $('#descricao').val();
+                            const descricao = $('#nova-descricao').val();
                             $.ajax({
                                 url: '../core/addDescricao.php',
                                 type: 'POST',

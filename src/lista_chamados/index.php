@@ -1,7 +1,4 @@
 <?php
-include '../core/checkSession.php';
-?>
-<?php
 include_once('../core/checkSession.php');
 ?>
 <!DOCTYPE html>
@@ -72,6 +69,7 @@ include_once('../core/checkSession.php');
     <script>
         $(document).ready( function() {
             $chamados = '';
+            const parser = new DOMParser();
             // Pega e exibe a lista de chamados
             $.ajax({
                 url: 'list_chamados.php',
@@ -81,13 +79,14 @@ include_once('../core/checkSession.php');
                     if (response.success) {
                         console.log(response);
                         response.chamados.forEach(chamado => {
+                            let descricao = parser.parseFromString(chamado.descricao, 'text/html').body.textContent;
                             $chamados += `
                                 <a href="../visualiza_chamado/?id=${chamado.id}" class="list-group-item list-group-item-action">
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1">Chamado ${chamado.id}</h5>
                                         <small>${chamado.data_abertura}</small>
                                     </div>
-                                    ${chamado.descricao}
+                                    <p class="mb-1">${descricao}</p>
                                     <div class="d-flex w-100 justify-content-between">
                                         <p class="mb-1">${chamado.tipo_incidente}</p>
                                         <small>Aberto por ${chamado.autor_chamado}</small>

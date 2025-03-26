@@ -121,8 +121,8 @@ include_once('../core/checkSession.php');
                     </div>
                 `;
                 $('#additional-phones').append(newPhoneField);
-                $(`#telefone-solicitante-${indexTelefone}`).mask(phoneMaskBehavior, phoneOptions);
-                phoneIndex++;
+                $(`#telefone-solicitante-${indexTelefone}`).mask(comportamentoMascara, options);
+                indexTelefone++;
             });
 
             // Envia o formulário de abertura de chamado
@@ -130,8 +130,9 @@ include_once('../core/checkSession.php');
                 event.preventDefault();
                 var formData = new FormData(this);
                 
-                $('#additional-phones input').each(function () {
-                    formData.append($(this).attr('name'), $(this).val());
+                $('#additional-phones input[id^="telefone-solicitante-"]').each(function () {
+                    console.log($(this).val());
+                    formData.append('telefones-adicionais[]', $(this).val());
                 });
 
                 var anexos = $('#anexos')[0].files;
